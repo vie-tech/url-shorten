@@ -15,23 +15,48 @@ const urlDatabase = {};
 
 //ROUTES SETUP
 
-// Route to render the homepage
 // ROUTE TO RENDER THE HOMEPAGE
 app.get("/", (req, res) => {
   const shortenedUrls = Object.keys(urlDatabase);
- 
+
   res.render("index", { shortenedUrls, urlDatabase }); // Pass decodedUrl to the template
 });
 
 
 
+
+//ROUTE TO SHORTEN THE URL
+app.post("/encode", (req, res) => {
+  try {
+    const originalUrl = req.body.url.trim();
+
+    console.log(originalUrl);
+    if (!originalUrl) {
+      throw new Error("Invalid Url passed");
+    }
+    const shortUrl = generateShortUrl();
+    urlDatabase[shortUrl] = { originalUrl, hits: 0 };
+    res.redirect(`/`);
+  } catch (err) {
+    res.render("errors", { err: err.message });
+    console.log(err.message);
+  }
+});
+
+
+
+
+
 //ROUTE TO DECODE URL
 
-app.post('/decode', (req, res) => {
+app.post("/decode", (req, res) => {
   const shortUrl = req.body.url;
-  const originalUrl = urlDatabase[shortUrl] ? urlDatabase[shortUrl].originalUrl : null;
-  res.render('decoded', { decodedUrl: originalUrl }); // Always pass decodedUrl to the template
+  const originalUrl = urlDatabase[shortUrl]
+    ? urlDatabase[shortUrl].originalUrl
+    : null;
+  res.render("decoded", { decodedUrl: originalUrl }); // Always pass decodedUrl to the template
 });
+
 
 
 
@@ -49,6 +74,7 @@ app.get("/:shortUrl", (req, res) => {
     res.status(404).send("URL not found");
   }
 });
+
 
 
 
@@ -74,25 +100,12 @@ app.get("/statistics/:short_url", (req, res) => {
 
 
 
-//ROUTE TO SHORTEN THE URL
-app.post("/encode", (req, res) => {
-  console.log(req.hostname);
-  const originalUrl = req.body.url;
-  const shortUrl = generateShortUrl();
-  urlDatabase[shortUrl] = { originalUrl, hits: 0 };
-  res.redirect(`/`);
-});
-
-
-
 
 
 // Generate a short ID for URL
 function generateShortUrl() {
   return shortid.generate();
 }
-
-
 
 //SERVER LISTENING FUNCTION
 app.listen(PORT, () => {
