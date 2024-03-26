@@ -44,16 +44,17 @@
     <table  class="table table-bordered w-75 mt-5">
         <thead>
           <tr>
-            <th scope="col">Long Url</th>
+            <th scope="col">#</th>
             <th scope="col">Short Url</th>
             <th scope="col">Clicked</th>
           </tr>
         </thead>
-        <% shortenedUrls.forEach(url => { %>
+        <% shortenedUrls.forEach((url, index) => { %>
           <tr>
-              <td><%= urlDatabase[url].originalUrl %></td>
+              <td><%=index + 1%></td>
               <td><a href="<%= url %>"><%= url %></a></td>
               <td><%= urlDatabase[url].hits %></td>
+              <td><a href="/statistics/<%=url %>" class="btn btn-danger">Details</a></td>
           </tr>
       <% }); %>
       </table>

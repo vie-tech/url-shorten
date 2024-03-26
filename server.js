@@ -28,7 +28,7 @@ app.get('/', (req, res) => {
 
 
 // Route to decode a shortened URL to its original URL
-app.get('/decode/:shortUrl', (req, res) => {
+app.get('/:shortUrl', (req, res) => {
   const shortUrl = req.params.shortUrl;
   const originalUrl = urlDatabase[shortUrl] ? urlDatabase[shortUrl].originalUrl : null;
   if (originalUrl) {
@@ -38,6 +38,18 @@ app.get('/decode/:shortUrl', (req, res) => {
     res.status(404).send('URL not found');
   }
 });
+
+app.get('/statistics/:short_url', (req, res)=>{
+  const short_url = req.params.short_url;
+  const originalUrl = urlDatabase[short_url] ? urlDatabase[short_url].originalUrl : null;
+  if (originalUrl) {
+   const clicks =  urlDatabase[short_url].hits++;
+   res.render('statistics', {clicks:clicks, originalUrl})
+  }else{
+    res.send('SOMETHING WENT WRONG WITH THE REQUEST')
+  }
+ 
+})
 
 
 //ROUTE TO SHORTEN THE URL
