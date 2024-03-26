@@ -44,31 +44,18 @@
     <table  class="table table-bordered w-75 mt-5">
         <thead>
           <tr>
-            <th scope="col">#</th>
             <th scope="col">Long Url</th>
-            <th scope="col">Shor Url</th>
+            <th scope="col">Short Url</th>
             <th scope="col">Clicked</th>
           </tr>
         </thead>
-        <tbody>
+        <% shortenedUrls.forEach(url => { %>
           <tr>
-            <th scope="row">1</th>
-            <td>Mark</td>
-            <td>Otto</td>
-            <td>@mdo</td>
+              <td><%= urlDatabase[url].originalUrl %></td>
+              <td><a href="<%= url %>"><%= url %></a></td>
+              <td><%= urlDatabase[url].hits %></td>
           </tr>
-          <tr>
-            <th scope="row">2</th>
-            <td>Jacob</td>
-            <td>Thornton</td>
-            <td>@fat</td>
-          </tr>
-          <tr>
-            <th scope="row">3</th>
-            <td>Larry the Bird</td>
-            <td>@twitter</td>
-          </tr>
-        </tbody>
+      <% }); %>
       </table>
 
     <script

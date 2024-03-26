@@ -19,11 +19,12 @@ const urlDatabase = {};
 
 //ROUTES SETUP
 
-//Homepage route
-app.get('/', (req, res)=>{
+// Route to render the homepage
+app.get('/', (req, res) => {
   const shortenedUrls = Object.keys(urlDatabase);
-  res.render('index', { shortenedUrls });
-})
+  res.render('index', { shortenedUrls, urlDatabase }); // Pass urlDatabase to the template
+});
+
 
 
 // Route to decode a shortened URL to its original URL
@@ -44,7 +45,7 @@ app.post('/encode', (req, res) => {
   const originalUrl = req.body.url;
   const shortUrl = generateShortUrl();
   urlDatabase[shortUrl] = { originalUrl, hits: 0 };
-  res.send(`Shortened URL: ${req.hostname}/${shortUrl}`);
+  res.redirect(`/`);
 });
 
 
