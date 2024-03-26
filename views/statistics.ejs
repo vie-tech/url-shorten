@@ -21,6 +21,15 @@
             <p><%= clicks %></p>
             <h1>Host</h1>
             <p><%= parsedUrl %></p>
+            <h1>Secure ?</h1>
+            <p>
+                <% if (safety == 'https:') { %>
+                    true
+                <% } else { %>
+                    false
+                <% } %>
+            </p>
+            
         </div>
     </div>
 </body>
