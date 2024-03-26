@@ -3,6 +3,7 @@ const express = require("express");
 const app = express();
 const PORT = process.env.PORT || 7000;
 const shortid = require('shortid');
+const url = require('url');
 
 
 //MIDDLEWARE SETUP
@@ -27,7 +28,7 @@ app.get('/', (req, res) => {
 
 
 
-// Route to decode a shortened URL to its original URL
+// Route to take you to the original Url destination/* 
 app.get('/:shortUrl', (req, res) => {
   const shortUrl = req.params.shortUrl;
   const originalUrl = urlDatabase[shortUrl] ? urlDatabase[shortUrl].originalUrl : null;
@@ -38,13 +39,15 @@ app.get('/:shortUrl', (req, res) => {
     res.status(404).send('URL not found');
   }
 });
-
+ 
+//Route to get the statistics of the clicked URL
 app.get('/statistics/:short_url', (req, res)=>{
   const short_url = req.params.short_url;
+  const clicks =  urlDatabase[short_url].hits++;
   const originalUrl = urlDatabase[short_url] ? urlDatabase[short_url].originalUrl : null;
+  const parsedUrl = new URL(originalUrl);
   if (originalUrl) {
-   const clicks =  urlDatabase[short_url].hits++;
-   res.render('statistics', {clicks:clicks, originalUrl})
+   res.render('statistics', {clicks:clicks, originalUrl, parsedUrl: parsedUrl.host})
   }else{
     res.send('SOMETHING WENT WRONG WITH THE REQUEST')
   }
@@ -52,8 +55,10 @@ app.get('/statistics/:short_url', (req, res)=>{
 })
 
 
+
 //ROUTE TO SHORTEN THE URL
 app.post('/encode', (req, res) => {
+  console.log(req.hostname)
   const originalUrl = req.body.url;
   const shortUrl = generateShortUrl();
   urlDatabase[shortUrl] = { originalUrl, hits: 0 };
