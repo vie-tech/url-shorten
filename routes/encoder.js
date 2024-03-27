@@ -25,8 +25,10 @@ router.post("/encode", (req, res) => {
     const originalUrl = req.body.url.trim();
 
     if (!originalUrl) {
-      throw new Error("Invalid Url passed");
+      // Return 400 Bad Request status for empty input URLs
+      return res.status(400).send("Invalid Url passed");
     }
+
     const shortUrl = generateShortUrl();
     // Store the short URL and original URL in the database
     urlDatabase[shortUrl] = { originalUrl, hits: 0 };
@@ -36,6 +38,7 @@ router.post("/encode", (req, res) => {
     console.log(err.message);
   }
 });
+
 
 
 
