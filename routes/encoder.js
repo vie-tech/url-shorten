@@ -18,7 +18,6 @@ router.get("/", (req, res) => {
 
 
 
-//ROUTE TO SHORTEN THE URL
 // ROUTE TO SHORTEN THE URL
 router.post("/encode", (req, res) => {
   try {

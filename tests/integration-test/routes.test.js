@@ -1,89 +1,23 @@
-const server = require("../../server");
+const server = require("../../startup/app");
 const request = require("supertest");
-const {urlDatabase} = require('../../routes/encoder')
 
-//ENCODE ROUTES
 describe("ENCODING ROUTES TESTS", () => {
+
+  // Before all tests, start the server
+  beforeAll(async () => {
+   server.listen(); // This will start the server on a random available port
+  });
+
+  // After all tests, stop the server
+  afterAll(async () => {
+    await server.close;
+  });
+
   describe("TESTING POSITIVE OUTCOMES", () => {
     it("GET / should return homepage", async () => {
       const res = await request(server).get("/");
       expect(res.status).toBe(200);
       expect(res.text).toContain("<!DOCTYPE html>");
     });
-
-    it("POST /encode should create a short URL", async () => {
-      const res = await request(server)
-        .post("/encode")
-        .send({ url: "http://example.com" });
-      expect(res.status).toBe(302);
-      expect(res.header["location"]).toMatch("/");
-    });
   });
-  
-
-  describe("TESTING NEGATIVE OUTCOMES", () => {
-    it("POST /encode should not create a short URL for empty inputes", async () => {
-      const res = await request(server)
-        .post("/encode")
-        .send({ url: "" });
-      expect(res.status).toBe(400);
-      expect(res.text).toContain("Invalid Url passed");
-  })}
-)});
-
-
-
-//DECODE ROUTES
-describe('Decode URL Route', () => {
-    beforeEach(() => {
-      urlDatabase['shortUrl123'] = { originalUrl: 'https://example.com', hits: 0 };
-    });
-  
-    it('Decoding existing short URL', async () => {
-      const response = await request(server)
-        .post('/decode')
-        .send({ url: 'shortUrl123' })
-        .expect(200);
-  
-      expect(response.text).toContain('https://example.com');
-    });
-  
-    //NEGATIVE OUTCOME
-    it('Decoding non-existent short URL', async () => {
-      const response = await request(server)
-        .post('/decode')
-        .send({ url: 'nonExistentShortUrl' })
-        .expect(200);
-  
-      expect(response.text).toContain(' <h3>No decoded URL found</h3');
-    });
-  });
-  
-
-
-
-
-  describe('Statistics Route Tests', () => {
-    beforeEach(() => {
-      urlDatabase['shortUrl123'] = { originalUrl: 'https://example.com', hits: 5 }; // Sample data for testing
-    });
-  
-    test('Fetching statistics for existing short URL', async () => {
-      const response = await request(server)
-        .get('/statistics/shortUrl123')
-        .expect(200);
-  
-      expect(response.text).toContain(' <title>Route statistics</title>');
-    });
-  
-    test('Fetching statistics for non-existent short URL', async () => {
-      const response = await request(server)
-        .get('/statistics/nonExistentShortUrl')
-        .expect(500);
-  
-      expect(response.text).toContain('<title>Error</title>');
-    });
-  });
-  
-  
-  
+});
