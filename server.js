@@ -2,7 +2,7 @@
 const express = require("express");
 const app = express();
 const PORT = process.env.PORT || 7000;
-const router = require('./routes/encoder')
+const {router} = require('./routes/encoder')
 
 
 //MIDDLEWARE SETUP

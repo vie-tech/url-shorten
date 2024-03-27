@@ -19,6 +19,7 @@ router.get("/", (req, res) => {
 
 
 //ROUTE TO SHORTEN THE URL
+// ROUTE TO SHORTEN THE URL
 router.post("/encode", (req, res) => {
   try {
     const originalUrl = req.body.url.trim();
@@ -27,6 +28,7 @@ router.post("/encode", (req, res) => {
       throw new Error("Invalid Url passed");
     }
     const shortUrl = generateShortUrl();
+    // Store the short URL and original URL in the database
     urlDatabase[shortUrl] = { originalUrl, hits: 0 };
     res.redirect(`/`);
   } catch (err) {
@@ -34,6 +36,7 @@ router.post("/encode", (req, res) => {
     console.log(err.message);
   }
 });
+
 
 
 
@@ -90,4 +93,4 @@ router.get("/:shortUrl", (req, res) => {
   });
 
 
-module.exports = router
+module.exports = {router, urlDatabase}
